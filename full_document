@@ -1,0 +1,509 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CAB System API",
+    "description": "API documentation for CAB System MVP 7 weeks.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080/api/v1",
+      "description": "Local development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Users"
+    },
+    {
+      "name": "Rides"
+    },
+    {
+      "name": "Drivers"
+    },
+    {
+      "name": "Payments"
+    },
+    {
+      "name": "Ratings"
+    },
+    {
+      "name": "Operations"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a new account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "409": {
+            "description": "Phone number already exists"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid phone number or password"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Logout",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rides": {
+      "post": {
+        "tags": [
+          "Rides"
+        ],
+        "summary": "Create a new ride",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRideRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ride created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ride"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ride request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rides/{rideId}": {
+      "get": {
+        "tags": [
+          "Rides"
+        ],
+        "summary": "Get ride details",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "rideId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "RID-000001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ride details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ride"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Ride not found"
+          }
+        }
+      }
+    },
+    "/drivers/status": {
+      "put": {
+        "tags": [
+          "Drivers"
+        ],
+        "summary": "Update driver online/offline status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Driver status updated"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create a payment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment created"
+          },
+          "400": {
+            "description": "Invalid payment request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/ratings": {
+      "post": {
+        "tags": [
+          "Ratings"
+        ],
+        "summary": "Rate a completed ride",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rating created"
+          },
+          "400": {
+            "description": "Invalid rating request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "phone",
+          "password"
+        ],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "example": "0901234567"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "Password123"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": [
+          "phone",
+          "password"
+        ],
+        "properties": {
+          "phone": {
+            "type": "string",
+            "example": "0901234567"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "Password123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyJhbGciOi..."
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer"
+          }
+        }
+      },
+      "Location": {
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "example": 10.8231
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "example": 106.6297
+          }
+        }
+      },
+      "CreateRideRequest": {
+        "type": "object",
+        "required": [
+          "pickup_location",
+          "dropoff_location",
+          "vehicle_type",
+          "payment_method"
+        ],
+        "properties": {
+          "pickup_location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "dropoff_location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "vehicle_type": {
+            "type": "string",
+            "enum": [
+              "CAR_4",
+              "CAR_7"
+            ],
+            "example": "CAR_4"
+          },
+          "payment_method": {
+            "type": "string",
+            "enum": [
+              "CASH",
+              "ELECTRONIC"
+            ],
+            "example": "CASH"
+          }
+        }
+      },
+      "Ride": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "RID-000001"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "SEARCHING",
+              "ACCEPTED",
+              "ARRIVED",
+              "IN_TRANSIT",
+              "COMPLETED",
+              "FAILED_NO_DRIVER"
+            ],
+            "example": "SEARCHING"
+          },
+          "vehicle_type": {
+            "type": "string",
+            "enum": [
+              "CAR_4",
+              "CAR_7"
+            ],
+            "example": "CAR_4"
+          },
+          "estimated_fare": {
+            "type": "number",
+            "example": 58000
+          }
+        }
+      },
+      "DriverStatusRequest": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ONLINE",
+              "OFFLINE"
+            ],
+            "example": "ONLINE"
+          }
+        }
+      },
+      "PaymentRequest": {
+        "type": "object",
+        "required": [
+          "ride_id",
+          "payment_method"
+        ],
+        "properties": {
+          "ride_id": {
+            "type": "string",
+            "example": "RID-000001"
+          },
+          "payment_method": {
+            "type": "string",
+            "enum": [
+              "CASH",
+              "ELECTRONIC"
+            ],
+            "example": "CASH"
+          }
+        }
+      },
+      "RatingRequest": {
+        "type": "object",
+        "required": [
+          "ride_id",
+          "rating"
+        ],
+        "properties": {
+          "ride_id": {
+            "type": "string",
+            "example": "RID-000001"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 5
+          },
+          "feedback": {
+            "type": "string",
+            "example": "Driver was polite and professional."
+          }
+        }
+      }
+    }
+  }
+}
